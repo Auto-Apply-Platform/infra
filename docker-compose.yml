@@ -41,3 +41,15 @@ services:
 
 volumes:
   mongo_data:
+
+  website_frontend:
+    build:
+      context: ../website_frontend
+    container_name: website_frontend
+    restart: unless-stopped
+    depends_on:
+      - website_backend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://website_backend:5000
