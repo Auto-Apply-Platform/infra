@@ -13,6 +13,8 @@ services:
   website_backend:
     build:
       context: ../website_backend
+    env_file:
+      - ../website_backend/.env
     container_name: website_backend
     restart: unless-stopped
     depends_on:
@@ -26,6 +28,7 @@ services:
     volumes:
       - ../website_backend/app:/app/app
       - ../website_backend/uploads:/app/uploads
+
 
   mongo_express:
     image: mongo-express:1.0.2-20
