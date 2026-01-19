@@ -29,7 +29,6 @@ services:
       - ../website_backend/app:/app/app
       - ../website_backend/uploads:/app/uploads
 
-
   mongo_express:
     image: mongo-express:1.0.2-20
     container_name: mongo_express
@@ -41,10 +40,7 @@ services:
       ME_CONFIG_MONGODB_PORT: 27017
     ports:
       - "8081:8081"
-
-volumes:
-  mongo_data:
-
+  
   website_frontend:
     build:
       context: ../website_frontend
@@ -56,3 +52,6 @@ volumes:
       - "3000:80"
     environment:
       - VITE_API_URL=http://website_backend:5000
+
+volumes:
+  mongo_data:
