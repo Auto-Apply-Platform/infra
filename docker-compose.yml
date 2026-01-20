@@ -43,6 +43,19 @@ services:
     ports:
       - "8080:8080"
 
+  website_frontend:
+    build:
+      context: ../website_frontend
+      args:
+        REACT_APP_API_BASE_URL: /api
+        REACT_APP_TELEGRAM_BOT_USERNAME: ${REACT_APP_TELEGRAM_BOT_USERNAME}
+    container_name: website_frontend
+    restart: unless-stopped
+    depends_on:
+      - website_backend
+    ports:
+      - "3000:80"
+
   reverse_proxy:
     image: caddy:2
     container_name: reverse_proxy
