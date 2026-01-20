@@ -1,0 +1,6 @@
+{$AUTH_TELEGRAM_DOMAIN} {
+    encode gzip
+
+    @webhook path /telegram/webhook
+    reverse_proxy @webhook auth_telegram_service:8080
+}

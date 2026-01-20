@@ -29,18 +29,20 @@ services:
       - ../website_backend/app:/app/app
       - ../website_backend/uploads:/app/uploads
 
-  mongo_express:
-    image: mongo-express:1.0.2-20
-    container_name: mongo_express
+  auth_telegram_service:
+    build:
+      context: ../auth_telegram_service
+    env_file:
+      - ../auth_telegram_service/.env
+    container_name: auth_telegram_service
     restart: unless-stopped
     depends_on:
-      - mongo
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_PORT: 27017
+      - website_backend
+    expose:
+      - "8080"
     ports:
-      - "8081:8081"
-  
+      - "8080:8080"
+
   website_frontend:
     build:
       context: ../website_frontend
@@ -51,7 +53,26 @@ services:
     ports:
       - "3000:80"
     environment:
+      - VITE_API_URL=http://website_backend:5000
       - REACT_APP_API_URL=http://website_backend:5000
+
+  reverse_proxy:
+    image: caddy:2
+    container_name: reverse_proxy
+    restart: unless-stopped
+    depends_on:
+      - auth_telegram_service
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      AUTH_TELEGRAM_DOMAIN: ${AUTH_TELEGRAM_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   mongo_data:
+  caddy_data:
+  caddy_config:
