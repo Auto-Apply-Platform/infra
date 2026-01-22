@@ -71,8 +71,28 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+      
+  vacancy_collector:
+    build:
+      context: ../vacancy_collector
+    container_name: vacancy_collector
+    restart: unless-stopped
+
+    env_file:
+      - ../vacancy_collector/.env
+
+    volumes:
+      - ../vacancy_collector/channels.txt:/app/channels.txt:ro
+      - ../vacancy_collector/sessions:/app/sessions
+
+    environment:
+      TG_SESSION: /app/sessions/vacancy_userbot
+
+    stdin_open: true
+    tty: true
 
 volumes:
   mongo_data:
   caddy_data:
   caddy_config:
+
