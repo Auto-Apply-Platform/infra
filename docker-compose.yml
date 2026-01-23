@@ -29,12 +29,12 @@ services:
       - ../website_backend/app:/app/app
       - ../website_backend/uploads:/app/uploads
 
-  auth_telegram_service:
+  telegram_service:
     build:
-      context: ../auth_telegram_service
+      context: ../telegram_service
     env_file:
-      - ../auth_telegram_service/.env
-    container_name: auth_telegram_service
+      - ../telegram_service/.env
+    container_name: telegram_service
     restart: unless-stopped
     depends_on:
       - website_backend
@@ -61,7 +61,7 @@ services:
     container_name: reverse_proxy
     restart: unless-stopped
     depends_on:
-      - auth_telegram_service
+      - telegram_service
     ports:
       - "80:80"
       - "443:443"
@@ -71,8 +71,28 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+      
+  vacancy_collector:
+    build:
+      context: ../vacancy_collector
+    container_name: vacancy_collector
+    restart: unless-stopped
+
+    env_file:
+      - ../vacancy_collector/.env
+
+    volumes:
+      - ../vacancy_collector/channels.txt:/app/channels.txt:ro
+      - ../vacancy_collector/sessions:/app/sessions
+
+    environment:
+      TG_SESSION: /app/sessions/vacancy_userbot
+
+    stdin_open: true
+    tty: true
 
 volumes:
   mongo_data:
   caddy_data:
   caddy_config:
+

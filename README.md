@@ -1,6 +1,6 @@
 # infra
 
-Инфраструктура для сервисов `website_backend` и `auth_telegram_service`.
+Инфраструктура для сервисов `website_backend` и `telegram_service`.
 
 ## Запуск
 
@@ -38,4 +38,4 @@ ngrok http 80
 TELEGRAM_WEBHOOK_PUBLIC_URL=https://<public-tunnel-domain>
 ```
 
-3) Перезапустите `auth_telegram_service`, чтобы пересоздать webhook.
+3) Перезапустите `telegram_service`, чтобы пересоздать webhook.
