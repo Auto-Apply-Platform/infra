@@ -1,12 +1,18 @@
 # infra
 
-Инфраструктура для сервисов `website_backend` и `telegram_service`.
+Инфраструктура для сервисов `website_backend`, `telegram_service`, `vacancy_collector`, `ai_worker`, Redis и MongoDB.
 
 ## Запуск
 
 ```bash
 docker compose up --build
 ```
+
+Перед запуском заполните `.env` файлы:
+- `website_backend/.env`
+- `telegram_service/.env`
+- `vacancy_collector/.env`
+- `worker/.env`
 
 ## HTTPS для Telegram webhook
 

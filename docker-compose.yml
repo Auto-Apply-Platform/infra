@@ -29,6 +29,13 @@ services:
       - ../website_backend/app:/app/app
       - ../website_backend/uploads:/app/uploads
 
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
   telegram_service:
     build:
       context: ../telegram_service
@@ -38,6 +45,7 @@ services:
     restart: unless-stopped
     depends_on:
       - website_backend
+      - redis
     expose:
       - "8080"
     ports:
@@ -77,12 +85,13 @@ services:
       context: ../vacancy_collector
     container_name: vacancy_collector
     restart: unless-stopped
+    depends_on:
+      - redis
 
     env_file:
       - ../vacancy_collector/.env
 
     volumes:
-      - ../vacancy_collector/channels.txt:/app/channels.txt:ro
       - ../vacancy_collector/sessions:/app/sessions
 
     environment:
@@ -91,8 +100,21 @@ services:
     stdin_open: true
     tty: true
 
+  ai_worker:
+    build:
+      context: ../ai_worker
+    container_name: ai_worker
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mongo
+      - telegram_service
+    env_file:
+      - ../ai_worker/.env
+    volumes:
+      - ../website_backend/uploads:/app/uploads
+
 volumes:
   mongo_data:
   caddy_data:
   caddy_config:
-
