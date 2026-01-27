@@ -1,4 +1,8 @@
-{$AUTH_TELEGRAM_DOMAIN} {
+{
+    auto_https off
+}
+
+http://{$AUTH_TELEGRAM_DOMAIN} {
     encode gzip
 
     @webhook path /telegram/webhook
